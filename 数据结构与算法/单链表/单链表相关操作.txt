@@ -1,0 +1,135 @@
+单链表存储结构
+typedef struct Node {
+ElemType data;//数据域
+struct Node *next;//指针域
+}Node;
+typedef struct Node *LinkList; 
+
+typedef struct Node {
+ElemType data;
+struct Node *next;
+}LNode,*LinkList;
+LNode 是结构体,LinkList一个结构体指针,LNode a,LinkList b; a.data,b->data;(引用区别)
+关于结构体 struct Node *next; 这么一句代码，为什么要这么写？写成 int *next 行不行？
+不行。next是指向下一个Node，所以其类型必须是Node。int *next 只能指向int，而不能指向Node。所以必须定义为 Node 类型，但是 Node 是结构体，所以前面还得加上个 struct.
+typedef为C语言的关键字，作用是为一种数据类型定义一个新名字。(看例题)这里的数据类型包括内部数据类型（int,char等）和自定义的数据类型（struct等）。
+在编程中使用typedef目的一般有两个，一个是给变量一个易记且意义明确的新名字，另一个是简化一些比较复杂的类型声明。
+结构体中的 typedef struct Node 的意思就是，为自定义的数据类型定义一个新名字 Node。第二句就是声明自定义数据类型 Node 。
+例题:
+typedef struct Student
+　　　　{
+　　　　int a;
+　　　　}Stu;
+　　　　于是在声明变量的时候就可：Stu stu1;(如果没有typedef就必须用struct Student stu1;来声明)
+　　　　这里的Stu实际上就是struct Student的别名。Stu==struct Student
+　　　　另外这里也可以不写Student（于是也不能struct Student stu1;了，必须是Stu stu1;）
+一、插入
+1.声明一结点p指向链表头结点，初始化j从1开始；
+2.当j<i时，就遍历链表，让p的指针向后移动，不断指向下一结点，j累加1；
+3.若到链表末尾p为空，则说明第i个元素不存在；
+4.否则查找成功，在系统中生成一个空结点s；
+5.将数据元素e赋值给s->data；
+6.单链表的插入；
+7.返回成功。
+Status LinkInsert(LinkList *L,int i,ElemType e) {
+LinkList p,s;
+int j;
+p=*L;
+j=1;
+while(j<i && p) {
+p=p->next;
+j++;
+}
+if(!p || j>i) return ERROR;
+s=(LinkList)malloc(sizeof(Node));
+s->data=e;
+s->next=p->next;
+p->next=s;
+return OK;
+}
+二、取得元素
+Status  getElem(LinkList L,int i,ElemType *e) {
+LinkList p;
+int j;
+p=L->next;
+j=1;
+while(p&&j<i) {
+p=p->next;
+++j;
+}
+if(!p || j>i) return ERROR;
+*e=p->data;
+return OK;
+}
+三、删除
+Status LinkDelete (LinkList *L,int i,ElemType *e) {
+LinkList p,q;
+int j;
+p=*L;
+j=1;
+while(p->next && j<i) {
+p=p->next;
+++j;
+}
+if(!(p->next) || j>i) return ERROR;
+q=p->next;
+p->next=q->next;
+*e=q->data;
+free(q);
+return OK;
+}
+四、单链表的整表创建
+1.声明一结点p和计数器变量i；
+2.初始化一空链表L；
+3.让L的头结点的指针指向NULL，即建立一个带头结点的单链表；
+4.循环实现后继结点的赋值和插入。
+五、头插法建立单链表
+头插法从一个空表开始，生成新结点，读取数据存放到新结点的数据域中，然后将新结点插入到当前链表的表头上，直到结束为止。
+简单来说，就是把新加进的元素放在表头后的第一个位置：
+1.先让新节点的next指向头节点之后
+2.然后让表头的next指向新节点
+void CreateLinkHead (LinkList *L,int n) {
+LinkList p;
+int i;
+srand(time(0));
+*L=(LinkList)malloc(sizeof(Node));
+(*L)->next=NULL;
+for(i=0;i<n;i++) {
+p=(LinkList)malloc(sizeof(Node));
+p->data=rand()%100+1;
+p->next=(*L)->next;
+(*L)->next=p;
+}
+}
+六、尾插法建立单链表
+void CreateLinkTail(LinkList *L,int n) {
+LinkList p,r;
+int i;
+srand(time(0));
+*L=(LinkList)malloc(sizeof(Node));
+r=*L;
+if(i=0;i<n;i++) {
+p=(Node*)malloc(sizeof(Node));
+p->data=rand()%100+1;
+r->next=p;
+r=p;
+}
+r->next=NULL;
+}
+
+因为malloc函数返回的是空指针类型，
+所以必须转换为你想要的类型
+*表示转换的是Node指针类型.
+七、单链表的整表删除
+Status ClearLink(linkList *L) {
+LinkList p,q;
+p=(*L)->next;
+while(p) {
+q=p->next;
+free(p);
+p=q;
+}
+(*L)->next=NULL;
+return OK:
+}
+

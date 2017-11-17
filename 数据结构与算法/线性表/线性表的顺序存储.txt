@@ -1,0 +1,42 @@
+顺序存储结构封装需要三个属性:
+1.存储空间的起始位置，数组data，它的存储位置就是线性表存储空间的存储位置。
+2.线性表的最大存储容量：数组的长度MaxSize
+3.线性表的当前长度：length
+注意，数组的长度与线性表的当前长度需要区分一下：数组的长度是存放线性表的存储空间的总长度，一般初始化后不变。而线性表的当前长度是线性表中元素的个数，是会变化的。
+一、插入操作
+1.如果插入位置不合理，抛出异常
+2.如果线性表长度大于等于数组长度，则抛出异常或动态增加数组容量；
+3.从最后一个元素开始向前遍历到第i个位置，分别将它们都向后移动一个位置；
+4.将要插入元素填入位置i处；
+5.线性表长+1
+Status ListInsert(SqList *L ,int i,ElemType e) {
+int k;
+if(L->length==MAXSIZE) return ERROR;
+if(i<1 || i>L->length+1) return ERROR;
+if(i<=L->Length) {
+for(k=L->length-1;k>=i-1;k--) {
+L->data[k+1]=L->data[k];
+}
+}
+L->data[i-1]=e;
+L->length++;
+return OK:
+}
+二、删除操作
+1.如果删除位置不合理，抛出异常；
+2.取出删除元素；
+3.从删除元素位置开始遍历到最后一个元素位置，分别将它们都向前移动一个位置；
+4.表长-1
+Status ListDelete(SqList *L,int i,ElemType *e) {
+int k;
+if(L->length==0) return ERROR;
+if(i<1 || i>L->Length) return ERROR:
+*e=L->data[i-1];
+if(i<L->length) {
+for(k=i;k<L->Length;k++) {
+L->data[k-1]=L->data[k];
+}
+}
+L->Length--;
+return OK;
+}
